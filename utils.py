@@ -1,6 +1,6 @@
 """ Contains all useful functions """
 
-from cPickle import load, dump
+from _pickle import load, dump
 from keras.models import load_model
 
 from config.resources import model_resource
@@ -24,7 +24,7 @@ def sliding_window(image, windowSize, horizontalStride=4, verticalStride=4):
 
 def load_pkl(pklName, verbose=True):
     if verbose:
-        print "Loading data from data/{0}.p".format(pklName)
+        "Loading data from data/{0}.p".format(pklName)
     data = load(open('data/'+pklName+'.p', 'rb'))
     return data
 
@@ -32,15 +32,16 @@ def load_pkl(pklName, verbose=True):
 def dump_pkl(data, pklName, verbose = True):
 
     if verbose:
-        print "Dumping data into",pklName
-    dump(data, open('data/'+pklName+'.p', 'wb'))
+        print ("Dumping data into",pklName)
+    fileHandler = open('data/'+pklName+'.p', 'wb')
+    dump(data, fileHandler)
 
 def load_moviescope_model(modelName, verbose=True):
 
     if modelName.find('h5')==-1:
         modelName+=".h5"
     if verbose:
-        print "Loading model:",modelName
+        print ("Loading model:",modelName)
     model = load_model(model_resource+modelName)
     return model
 

@@ -13,8 +13,9 @@ def gather_training_data(genre, model_name=default_model_name):
     """Driver function to collect frame features for a genre"""
 
     trainPath = os.path.join(video_resource,'train',genre)
-    print(trainPath)
+    print("trainpath",trainPath)
     videoPaths = glob(trainPath+'/*')
+    print("videopath", videoPaths)
     genreFeatures = []
     for videoPath in videoPaths:
         print(videoPath,":",)

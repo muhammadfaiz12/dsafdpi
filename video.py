@@ -8,17 +8,17 @@ from model_utils import get_features
 
 def get_frames(videoPath, start_time=5000, end_time=120000, time_step=2000):
 
-    print "Getting frames for ",videoPath
+    print ("Getting frames for ",videoPath)
     try:
         cap = cv2.VideoCapture(videoPath)
         for k in range(start_time, end_time+1, time_step):
-            cap.set(cv2.cv.CV_CAP_PROP_POS_MSEC, k)
+            cap.set(cv2.CAP_PROP_POS_MSEC, k)
             success, frame = cap.read()
             if success:
                 frame = cv2.resize(frame,(frameWidth, frameHeight))
                 yield frame
     except Exception as e:
-        print e
+        print (e)
         return
 
 
@@ -33,11 +33,11 @@ def extract_feature_video(videoPath, verbose=False):
     """deprecated"""
     """Returns features of shape (N, 4096), N: number of processed frames"""
     if verbose:
-        print "\nStarting to extract features for ",videoPath
+        print ("\nStarting to extract features for ",videoPath)
     for frame in get_frames(videoPath):
         feature = get_features(frame)
         if verbose:
-            print ".",
+            print ("."),
         yield feature
     print
 
@@ -55,12 +55,12 @@ def save_frames_video(videoPath, videoID, outPath='./data'):
         os.makedirs(outPath)
     
     if not os.path.exists(videoPath):
-        print "Video not found"
+        print ("Video not found")
         return None
 
     for frame_no, frame in enumerate(get_frames(videoPath)):
         frameWritePath = os.path.join(outPath,str(videoID)+'_'+str(frame_no)+'.jpg')
-        print 'writing frame# {0} to {1}'.format(frame_no, frameWritePath)
+        'writing frame# {0} to {1}'.format(frame_no, frameWritePath)
         cv2.imwrite(frameWritePath, frame)
 
 
@@ -68,7 +68,7 @@ def get_videos(genre):
     
     videoPaths = glob(video_resource+genre+'/*')
     for videoID, videoPath in enumerate(videoPaths):
-        print videoPath
+        print (videoPath)
         save_frames_video(videoPath, videoID, outPath='./data/'+genre)
 
 

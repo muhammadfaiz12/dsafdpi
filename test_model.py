@@ -4,6 +4,7 @@ from video import get_frames
 from model_utils import get_features_batch
 from config.global_parameters import default_model_name
 from config.resources import video_resource
+from config.resources import model_resource
 from glob import glob
 import numpy as np
 from utils import dump_pkl, load_pkl, load_moviescope_model
@@ -15,18 +16,18 @@ def gather_testing_data(genre, model_name=default_model_name):
     """Driver function to collect frame features for a genre"""
 
     testPath = os.path.join(video_resource,'test',genre)
-    print testPath 
+    print (testPath) 
     videoPaths = glob(testPath+'/*')
     genreFeatures = []
     for videoPath in videoPaths:
-        print videoPath,":",
+        print (videoPath,":",)
         frames =list(get_frames(videoPath, time_step=1000))
-        print len(frames),
+        print (len(frames),)
         if len(frames)==0:
-            print "corrupt."
+            print ("corrupt.")
             continue
         videoFeatures = get_features_batch(frames)
-        print videoFeatures.shape
+        print (videoFeatures.shape)
         genreFeatures.append(videoFeatures)
 
     outPath = genre+"_test_"+model_name
@@ -36,12 +37,12 @@ def test_video(videoPath):
     """Return the genre type for each video input"""
     frames = list(get_frames(videoPath, time_step=1000))
     if len(frames)==0:
-        print "Error in video"
+        print ("Error in video")
         return
     
-    print "Processing",videoPath
-    modelName = "adhr_spatialvgg16_4g_bs32_ep100.h5"
-    model = load_model("/Users/sivaramanks/code/MovieScope/data/models/"+ modelName)
+    print ("Processing",videoPath)
+    modelName = "spatialvgg16_1g_bs32_ep100.h5"
+    model = load_model(model_resource + modelName)
 
     videoFeatures = get_features_batch(frames)
     predictedClasses = model.predict_classes(videoFeatures)
@@ -62,15 +63,15 @@ def ultimate_evaluate(model):
             genreFeatures = load_pkl(genre+"_test_"+default_model_name)
             genreFeatures = np.array([np.array(f) for f in genreFeatures]) # numpy hack
         except Exception as e:
-            print e
+            print (e)
             return
-        print "OK."
+        print ("OK.")
         for videoFeatures in genreFeatures:
             """to get all frames from a video -- hacky"""
             total[genreIndex]+=1
             d = defaultdict(int)
             predictedClasses = model.predict_classes(videoFeatures) #List of predictions, per-frame
-            print predictedClasses
+            print (predictedClasses)
             for i in predictedClasses:
                 d[i]+=1
             predictedGenre = max(d.iteritems(), key=lambda x: x[1])[0]
@@ -79,10 +80,10 @@ def ultimate_evaluate(model):
             if predictedGenre == genreIndex:
                 correct[genreIndex]+=1
 
-    print correct, total
+    print (correct, total)
 
     confusionMatrix = confusion_matrix(yTrue, yPredict)
-    print confusionMatrix
+    print (confusionMatrix)
 
 #
 if __name__=="__main__":
@@ -92,9 +93,10 @@ if __name__=="__main__":
     #ultimate_evaluate(model)
     """to call test_video"""
     genres, scores = test_video(argv[1])
-    predictedGenre = np.argmax(np.bincount(genres))                                                  
+    #print("genresArr", genres)
+    predictedGenre = np.argmax(np.bincount(genres[:,0]))                                                  
     genreDict = {0:'action',1:'drama',2:'horror',3:'romance'}                                        
-    frameSequence=' | '.join([genreDict[key] for key in genres])                                     
+    frameSequence=' | '.join([genreDict[key] for key in genres[:,0]])                                     
 
-    print predictedGenre
-    print frameSequence
+    print (predictedGenre)
+    print (frameSequence)
