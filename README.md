@@ -5,7 +5,9 @@
 ## How the Applications Work
 
 Buat create_data.py jalaninnya pake genre kayak create_data.py [genre] genrenya bebas tergantung folder
+
 create_model.py langsung bisa
+
 test_model.py [lokasi video yang mau di test (jangan pake spasi di namanya)]
 
 -----------------------------
