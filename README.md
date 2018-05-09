@@ -4,6 +4,12 @@
 
 ## How the Applications Work
 
+Buat create_data.py jalaninnya pake genre kayak create_data.py [genre] genrenya bebas tergantung folder
+create_model.py langsung bisa
+test_model.py [lokasi video yang mau di test (jangan pake spasi di namanya)]
+
+-----------------------------
+
 The application is console-based which can be executed from the terminal. The general steps are as follows:
 
 1. The program will import the data from the .csv that provided. 
