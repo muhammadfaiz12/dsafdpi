@@ -83,4 +83,4 @@ def train_classifier(genres=['romance', 'horror', 'action'], num_of_videos=100):
     
 if __name__=="__main__":
     from sys import argv
-    train_classifier(genres=['action', 'horror', 'romance'],num_of_videos=100)
+    train_classifier(genres=['action', 'horror', 'comedy'],num_of_videos=100)

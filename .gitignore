@@ -1,2 +1,14 @@
-__pycache__/
+git_ignore_dir/
+config/*.pyc
+MovieScope_DataSet/*/*/*.mp4
+MovieScope_DataSet/train/action/*.mp4
+MovieScope_DataSet/train/horror/*.mp4
+MovieScope_DataSet/train/comedy/*.mp4
+MovieScope_DataSet/test/action/*.mp4
+MovieScope_DataSet/test/horror/*.mp4
+MovieScope_DataSet/test/comedy/*.mp4
+data/*/*.h5
+data/*/*/*.h5
 *.mp4
+*.p
+*.h5

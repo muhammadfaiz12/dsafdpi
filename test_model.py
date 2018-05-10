@@ -41,7 +41,7 @@ def test_video(videoPath):
         return
     
     print ("Processing",videoPath)
-    modelName = "spatialvgg16_1g_bs32_ep100.h5"
+    modelName = "spatialvgg16_3g_bs48_ep150.h5"
     model = load_model(model_resource + modelName)
 
     videoFeatures = get_features_batch(frames)
@@ -51,7 +51,7 @@ def test_video(videoPath):
     
 
 def ultimate_evaluate(model):
-    genres = ['action','drama','fantasy','horror','romance']
+    genres = ['action','horror','comedy']
     testingData = []
     testingLabels = []
     total = defaultdict.fromkeys(range(len(genres)),0)
@@ -94,9 +94,12 @@ if __name__=="__main__":
     """to call test_video"""
     genres, scores = test_video(argv[1])
     #print("genresArr", genres)
-    predictedGenre = np.argmax(np.bincount(genres[:,0]))                                                  
-    genreDict = {0:'action',1:'drama',2:'horror',3:'romance'}                                        
-    frameSequence=' | '.join([genreDict[key] for key in genres[:,0]])                                     
+    print("jumlah per genre: ", np.bincount(genres))
+    predictedGenre = np.argmax(np.bincount(genres))                                                  
+    genreDict = {0:'action',1:'horror',2:'comedy'}                                        
+    frameSequence=' | '.join([genreDict[key] for key in genres])                                     
 
     print (predictedGenre)
     print (frameSequence)
+	
+    print("\nGenre of this video is ", genreDict[predictedGenre])

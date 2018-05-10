@@ -7,15 +7,15 @@ from config.resources import video_resource
 from model_utils import get_features_batch
 from utils import dump_pkl
 from video import get_frames
-
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 def gather_training_data(genre, model_name=default_model_name):
     """Driver function to collect frame features for a genre"""
 
     trainPath = os.path.join(video_resource,'train',genre)
-    print("trainpath",trainPath)
+    print("trainpath = ",trainPath)
     videoPaths = glob(trainPath+'/*')
-    print("videopath", videoPaths)
+    print("videPath = ",videoPaths)
     genreFeatures = []
     for videoPath in videoPaths:
         print(videoPath,":",)
@@ -28,7 +28,7 @@ def gather_training_data(genre, model_name=default_model_name):
         print(videoFeatures.shape)
         genreFeatures.append(videoFeatures)
 
-    outPath = genre+"_ultimate_"+model_name
+    outPath = "train/"+genre+"_ultimate_"+model_name
     dump_pkl(genreFeatures, outPath)
 
         

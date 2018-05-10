@@ -7,7 +7,9 @@ from keras.layers.convolutional import Convolution2D, Convolution3D, MaxPooling2
 from keras import backend
 import numpy as np
 import tensorflow as tf
+import os
 tf.control_flow_ops = tf
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def remove_last_layers(model):
     """To remove the last FC layers of VGG and get the 4096 dim features"""
