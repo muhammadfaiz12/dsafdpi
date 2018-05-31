@@ -51,7 +51,7 @@ def test_video(videoPath):
     
 
 def ultimate_evaluate(model):
-    genres = ['action','horror','comedy']
+    genres = ['action','horror','romance']
     testingData = []
     testingLabels = []
     total = defaultdict.fromkeys(range(len(genres)),0)
@@ -60,7 +60,7 @@ def ultimate_evaluate(model):
     for genreIndex, genre in enumerate(genres):
 #        print "Looking for pickle file: data/{0}{1}.p".format(genre, str(num_of_videos)),
         try:
-            genreFeatures = load_pkl(genre+"_test_"+default_model_name)
+            genreFeatures = load_pkl("test/"+genre+"_ultimate_"+default_model_name)
             genreFeatures = np.array([np.array(f) for f in genreFeatures]) # numpy hack
         except Exception as e:
             print (e)
@@ -74,7 +74,7 @@ def ultimate_evaluate(model):
             print (predictedClasses)
             for i in predictedClasses:
                 d[i]+=1
-            predictedGenre = max(d.iteritems(), key=lambda x: x[1])[0]
+            predictedGenre = max(d.items(), key=lambda x: x[1])[0]
             yPredict.append(predictedGenre)
             yTrue.append(genreIndex)
             if predictedGenre == genreIndex:
@@ -89,17 +89,17 @@ def ultimate_evaluate(model):
 if __name__=="__main__":
 
     from sys import argv
-    #model = load_moviescope_model(argv[1])
-    #ultimate_evaluate(model)
+    model = load_moviescope_model(argv[1])
+    ultimate_evaluate(model)
     """to call test_video"""
-    genres, scores = test_video(argv[1])
+#    genres, scores = test_video(argv[1])
     #print("genresArr", genres)
-    print("jumlah per genre: ", np.bincount(genres))
-    predictedGenre = np.argmax(np.bincount(genres))                                                  
-    genreDict = {0:'action',1:'horror',2:'comedy'}                                        
-    frameSequence=' | '.join([genreDict[key] for key in genres])                                     
+#    print("jumlah per genre: ", np.bincount(genres))
+#    predictedGenre = np.argmax(np.bincount(genres))                                                  
+#    genreDict = {0:'action',1:'horror',2:'comedy'}                                        
+#    frameSequence=' | '.join([genreDict[key] for key in genres])                                     
 
-    print (predictedGenre)
-    print (frameSequence)
+#    print (predictedGenre)
+#    print (frameSequence)
 	
-    print("\nGenre of this video is ", genreDict[predictedGenre])
+#    print("\nGenre of this video is ", genreDict[predictedGenre])
