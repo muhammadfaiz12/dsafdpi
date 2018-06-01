@@ -1,11 +1,14 @@
 from config.global_parameters import default_model_name
 from utils import load_pkl
+from keras.optimizers import Adam, RMSprop
 import numpy as np
 from model_utils import spatial_model
+from model_utils import lstm_model
+from model_utils import mlp_model
 
 
 
-def train_classifier(genres=['comedy', 'horror', 'action'], model_name=default_model_name):
+def train_classifier(genres=['comedy', 'horror', 'action'],model_train='spatial', model_name=default_model_name, ):
     
     """Gather data for selected genres"""
     trainingData = []
@@ -38,8 +41,16 @@ def train_classifier(genres=['comedy', 'horror', 'action'], model_name=default_m
 #    trainingLabels = trainingLabels.reshape((-1,num_of_classes))
 
     """Initialize the mode"""
-    model = spatial_model(num_of_classes)
-    model.compile(optimizer='sgd', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    if(model_train == 'mlp'):
+        model = mlp_model(num_of_classes)
+        optimizer = Adam(lr=1e-5, decay=1e-6)
+        model.compile(optimizer='adadelta', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    elif (model_train == 'lstm'):
+        model = lstm_model(num_of_classes)
+        model.compile(optimizer='sgd', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    elif (model_train == 'spatial'):
+        model = spatial_model(num_of_classes)
+        model.compile(optimizer='sgd', loss='sparse_categorical_crossentropy', metrics=['accuracy'])        
 
    
     """Start training"""
@@ -47,12 +58,15 @@ def train_classifier(genres=['comedy', 'horror', 'action'], model_name=default_m
     nb_epoch = 100 
 
     model.fit(trainingData, trainingLabels, batch_size=batch_size, epochs=nb_epoch)#, callbacks=[remote])
-    modelOutPath ='data/models/spatial'+model_name+'_'+str(num_of_classes)+"g_bs"+str(batch_size)+"_ep"+str(nb_epoch)+".h5"
+    modelOutPath ='data/models/'+model_train+'_'+model_name+'_'+str(num_of_classes)+"g_bs"+str(batch_size)+"_ep"+str(nb_epoch)+".h5"
     model.save(modelOutPath)
     print("Model saved at",modelOutPath)
  
 
 if __name__=="__main__":
-
+    from sys import argv
+    nama_model_train = argv[1]
     #train_classifier(genres=['action','drama','fantasy','horror','romance'])
-	train_classifier(genres=['action','horror','romance'])
+    #train_classifier(genres=['action','horror','romance'], model_train=nama_model_train)
+    train_classifier(genres=['action','horror','romance'], model_train=nama_model_train, model_name='resnet')
+

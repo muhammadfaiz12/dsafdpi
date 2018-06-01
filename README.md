@@ -13,7 +13,8 @@ The application is console-based which can be executed from the terminal. The ge
 
 1. Execute create_data.py using genre e.g create_data.py [genre] 
 (the genre depends on the folder)
-2. create_model.py runs immediate automatically
+2. create_model.py [model_name_train]
+**ada c3d, spatial, lstm
 3. test_model.py [video location that wanted to be tested(don't use space in the video's name)]
 
 ## Getting Started (How to Run the Program)

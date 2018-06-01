@@ -60,7 +60,7 @@ def ultimate_evaluate(model):
     for genreIndex, genre in enumerate(genres):
 #        print "Looking for pickle file: data/{0}{1}.p".format(genre, str(num_of_videos)),
         try:
-            genreFeatures = load_pkl("test/"+genre+"_ultimate_"+default_model_name)
+            genreFeatures = load_pkl("test/"+genre+"_test_ultimate_"+default_model_name)
             genreFeatures = np.array([np.array(f) for f in genreFeatures]) # numpy hack
         except Exception as e:
             print (e)
