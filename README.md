@@ -7,24 +7,6 @@ Main Focus:
 
 More detailed information can be found on the program source code or by clicking [here](https://docs.google.com/presentation/d/1QQ8NGCxgldaiX_JHSs7e5jC3SQUjoP4kknG1FAFB_Qo/edit?usp=sharing).
 
-## How the Applications Work
-
-The application is console-based which can be executed from the terminal. The general steps are as follows:
-
-1. Execute create_data.py using genre e.g create_data.py [extractor] 
-
-   **ada vgg16 atau resnet
-
-2. create_model.py [model_name_train]
-
-   **ada mlp, spatial, lstm
-
-3. test_model.py [video/test] [....] [....]
-
-   **If video then [video_Path] [model_filename]
-
-   **If test then [model_name] [extractor_name]
-
 ## Getting Started (How to Run the Program)
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
@@ -43,12 +25,29 @@ These instructions will get you a copy of the project up and running on your loc
     it directly on the file. If you have a problem installing the dependencies, 
     please install python system package first.
 
-3. Run the app
+3. All the trailer videos is in MovieScope_DataSet directory. 
+4. Unspecific videos genre can be cleaned with clean.py
+5. Limit to 1 film per trailer can be cleaned using extra_clean.py
 
-    ```bash
-    python3 create_model.py
-    ```
-4. The model is created!
+## How the Applications Work
+
+The application is console-based which can be executed from the terminal. The general steps are as follows:
+
+1. Execute create_data.py using genre e.g create_data.py [extractor] 
+
+   **vgg16 or resnet
+
+2. create_model.py [model_name_train]
+
+   **mlp, spatial, or lstm
+
+3. test_model.py [video/test] [....] [....]
+
+   **If video then [video_Path] [model_filename]
+
+   **If test then [model_name] [extractor_name]
+
+4. The extracted feature & model will be saved on data directory
 
 ## Built With
 
