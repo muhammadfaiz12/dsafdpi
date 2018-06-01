@@ -67,7 +67,9 @@ if __name__=="__main__":
     from sys import argv
     nama_model_train = argv[1]
     nama_extract = argv[2]
-    epoch = argv[3]
+    epochnum = argv[3]
+    print(nama_extract)
+    print(epochnum)
     #train_classifier(genres=['action','drama','fantasy','horror','romance'])
     #train_classifier(genres=['action','horror','romance'], model_train=nama_model_train)
-    train_classifier(genres=['action','horror','romance'], model_train=nama_model_train, model_name='resnet', epoch)
+    train_classifier(genres=['action','horror','romance'], model_train=nama_model_train, model_name=nama_extract, epoch=epochnum)

@@ -68,7 +68,8 @@ def get_features(image, model_name="vgg16"):
 def mlp_model(number_of_classes=2):
     # Model.
     model = Sequential()
-    model.add(Dense(512, input_dim=4096, activation='relu'))
+    model.add(Flatten(input_shape=(224,224,3)))
+    model.add(Dense(512, activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(512, activation='relu'))
     model.add(Dropout(0.5))
