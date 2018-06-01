@@ -17,7 +17,7 @@ The application is console-based which can be executed from the terminal. The ge
 
 2. create_model.py [model_name_train]
 
-   **ada c3d, spatial, lstm
+   **ada mlp, spatial, lstm
 
 3. test_model.py [video/test] [....] [....]
 
