@@ -12,10 +12,15 @@ More detailed information can be found on the program source code or by clicking
 The application is console-based which can be executed from the terminal. The general steps are as follows:
 
 1. Execute create_data.py using genre e.g create_data.py [extractor] 
+
 **ada vgg16 atau resnet
 2. create_model.py [model_name_train]
+
 **ada c3d, spatial, lstm
-3. test_model.py [video location that wanted to be tested(don't use space in the video's name)]
+3. test_model.py [video/test] [....] [....]
+
+**If video then [video_Path] [model_filename]
+**If test then [model_name] [extractor_name]
 
 ## Getting Started (How to Run the Program)
 

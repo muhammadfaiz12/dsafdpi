@@ -33,7 +33,7 @@ def gather_testing_data(genre, model_name=default_model_name):
     outPath = genre+"_test_"+model_name
     dump_pkl(genreFeatures, outPath)
 
-def test_video(videoPath):
+def test_video(videoPath, model_file):
     """Return the genre type for each video input"""
     frames = list(get_frames(videoPath, time_step=1000))
     if len(frames)==0:
@@ -41,7 +41,7 @@ def test_video(videoPath):
         return
     
     print ("Processing",videoPath)
-    modelName = "spatialvgg16_3g_bs48_ep150.h5"
+    modelName = model_file
     model = load_model(model_resource + modelName)
 
     videoFeatures = get_features_batch(frames)
@@ -50,7 +50,7 @@ def test_video(videoPath):
     return predictedClasses, predictedScores
     
 
-def ultimate_evaluate(model):
+def ultimate_evaluate(model, extractor_name):
     genres = ['action','horror','romance']
     testingData = []
     testingLabels = []
@@ -60,11 +60,7 @@ def ultimate_evaluate(model):
     for genreIndex, genre in enumerate(genres):
 #        print "Looking for pickle file: data/{0}{1}.p".format(genre, str(num_of_videos)),
         try:
-<<<<<<< HEAD
-            genreFeatures = load_pkl("test/"+genre+"_test_ultimate_"+default_model_name)
-=======
-            genreFeatures = load_pkl("test/"+genre+"_test_"+default_model_name)
->>>>>>> d03333e5771fb8e6e2d44497c0111c56442030f3
+            genreFeatures = load_pkl("test/"+genre+"_test_"+extractor_name)
             genreFeatures = np.array([np.array(f) for f in genreFeatures]) # numpy hack
         except Exception as e:
             print (e)
@@ -140,19 +136,22 @@ def ultimate_evaluate(model):
 
 #
 if __name__=="__main__":
-
     from sys import argv
-    model = load_moviescope_model(argv[1])
-    ultimate_evaluate(model)
-    """to call test_video"""
-#    genres, scores = test_video(argv[1])
-    #print("genresArr", genres)
-#    print("jumlah per genre: ", np.bincount(genres))
-#    predictedGenre = np.argmax(np.bincount(genres))                                                  
-#    genreDict = {0:'action',1:'horror',2:'comedy'}                                        
-#    frameSequence=' | '.join([genreDict[key] for key in genres])                                     
+    
+    if(argv[1] == 'test'):
+        model = load_moviescope_model(argv[2])
+        extractor = argv[3]
+        ultimate_evaluate(model, extractor)
+    elif(argv[1] == 'video'):
+        """to call test_video"""
+        genres, scores = test_video(argv[2], argv[3])
+        #print("genresArr", genres)
+        print("jumlah per genre: ", np.bincount(genres))
+        predictedGenre = np.argmax(np.bincount(genres))                                                  
+        genreDict = {0:'action',1:'horror',2:'romance'}                                        
+        frameSequence=' | '.join([genreDict[key] for key in genres])                                     
 
-#    print (predictedGenre)
-#    print (frameSequence)
-	
-#    print("\nGenre of this video is ", genreDict[predictedGenre])
+        print (predictedGenre)
+        print (frameSequence)
+        
+        print("\nGenre of this video is ", genreDict[predictedGenre])

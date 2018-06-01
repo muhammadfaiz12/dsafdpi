@@ -65,11 +65,10 @@ def get_features(image, model_name="vgg16"):
     modelFeature =  model.predict(imageTensor)[0]
     return modelFeature
 
-def mlp_model(number_of_classes=2):
+def mlp_model(number_of_classes=2, dim=None):
     # Model.
     model = Sequential()
-    model.add(Flatten(input_shape=(224,224,3)))
-    model.add(Dense(512, activation='relu'))
+    model.add(Dense(512,input_dim=dim, activation='relu'))
     model.add(Dropout(0.5))
     model.add(Dense(512, activation='relu'))
     model.add(Dropout(0.5))
@@ -77,11 +76,11 @@ def mlp_model(number_of_classes=2):
     
     return model
 	
-def spatial_model(number_of_classes=2):
+def spatial_model(number_of_classes=2, dim=None):
     """Classification layers here."""
 
     model = Sequential()
-    model.add(Dense(2048, input_dim=4096, activation='relu'))
+    model.add(Dense(2048, input_dim=dim, activation='relu'))
     model.add(Dropout(0.25))
     model.add(Dense(256, activation='relu'))
     model.add(Dropout(0.5))
@@ -91,7 +90,7 @@ def spatial_model(number_of_classes=2):
     return model
 
 
-def lstm_model(number_of_classes=2, number_of_frames=None, input_dim=4096):
+def lstm_model(number_of_classes=2, number_of_frames=9, input_dim=4096):
     """Classification layers here with LSTM."""
 
     if number_of_frames == None:

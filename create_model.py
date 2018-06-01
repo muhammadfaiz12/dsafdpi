@@ -19,7 +19,8 @@ def train_classifier(genres=['comedy', 'horror', 'action'],model_train='spatial'
     for genreIndex, genre in enumerate(genres):
 #        print "Looking for pickle file: data/{0}{1}.p".format(genre, str(num_of_videos)),
         try:
-            genreFeatures = load_pkl("train/"+genre+"_train_"+default_model_name)
+            print("train/"+genre+"_train_"+model_name)
+            genreFeatures = load_pkl("train/"+genre+"_train_"+model_name)
             genreFeatures = np.array([np.array(f) for f in genreFeatures]) # numpy hack
         except Exception as e:
             print(e)
@@ -42,14 +43,27 @@ def train_classifier(genres=['comedy', 'horror', 'action'],model_train='spatial'
 
     """Initialize the mode"""
     if(model_train == 'mlp'):
-        model = mlp_model(num_of_classes)
+        model = mlp_model(num_of_classes, trainingData.shape[1])
         optimizer = Adam(lr=1e-5, decay=1e-6)
         model.compile(optimizer='adadelta', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     elif (model_train == 'lstm'):
-        model = lstm_model(num_of_classes)
+        num_of_frames = 9
+        num_of_samples = len(trainingLabels)
+        trainingDataTensor = np.zeros((num_of_samples, num_of_frames, trainingData.shape[1]))
+        print (len(trainingData))
+        for sampleIndex in range(num_of_samples):
+            for vectorIndex in range(num_of_frames):
+                try:
+                    trainingDataTensor[sampleIndex][vectorIndex] = trainingData[sampleIndex][vectorIndex]
+                except Exception as e:
+                    print (e)
+                    continue
+        print (trainingDataTensor.shape)
+        trainingData=trainingDataTensor
+        model = lstm_model(num_of_classes, input_dim=trainingData.shape[2])
         model.compile(optimizer='sgd', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     elif (model_train == 'spatial'):
-        model = spatial_model(num_of_classes)
+        model = spatial_model(num_of_classes, trainingData.shape[1])
         model.compile(optimizer='sgd', loss='sparse_categorical_crossentropy', metrics=['accuracy'])        
 
    
@@ -57,8 +71,8 @@ def train_classifier(genres=['comedy', 'horror', 'action'],model_train='spatial'
     batch_size = 32
     #b_epoch = 100 
 
-    model.fit(trainingData, trainingLabels, batch_size=batch_size, epochs=nb_epoch)#, callbacks=[remote])
-    modelOutPath ='data/models/'+model_train+'_'+model_name+'_'+str(num_of_classes)+"g_bs"+str(batch_size)+"_ep"+str(nb_epoch)+".h5"
+    model.fit(trainingData, trainingLabels, batch_size=batch_size, epochs=int(epoch))#, callbacks=[remote])
+    modelOutPath ='data/models/'+model_train+'_'+model_name+'_'+str(num_of_classes)+"g_bs"+str(batch_size)+"_ep"+str(epoch)+".h5"
     model.save(modelOutPath)
     print("Model saved at",modelOutPath)
  
@@ -68,8 +82,6 @@ if __name__=="__main__":
     nama_model_train = argv[1]
     nama_extract = argv[2]
     epochnum = argv[3]
-    print(nama_extract)
-    print(epochnum)
     #train_classifier(genres=['action','drama','fantasy','horror','romance'])
     #train_classifier(genres=['action','horror','romance'], model_train=nama_model_train)
     train_classifier(genres=['action','horror','romance'], model_train=nama_model_train, model_name=nama_extract, epoch=epochnum)
