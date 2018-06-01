@@ -28,7 +28,7 @@ def gather_training_data(genre, model_name=default_model_name):
         print(videoFeatures.shape)
         genreFeatures.append(videoFeatures)
 
-    outPath = "train/"+genre+"_ultimate_"+model_name
+    outPath = "train/"+genre+"_train_"+model_name
     dump_pkl(genreFeatures, outPath)
 	
 def gather_testing_data(genre, model_name=default_model_name):
@@ -57,6 +57,8 @@ def gather_testing_data(genre, model_name=default_model_name):
         
 if __name__=="__main__":
     from sys import argv
-    genre = argv[1]
-    gather_training_data(genre, "resnet")
-    gather_testing_data(genre, "resnet")
+    extractor = argv[1]
+    genres = ['action','horror','romance']#
+    for genre in genres:
+        gather_training_data(genre, extractor)
+        gather_testing_data(genre, extractor)

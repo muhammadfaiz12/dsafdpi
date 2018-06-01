@@ -8,7 +8,7 @@ from model_utils import mlp_model
 
 
 
-def train_classifier(genres=['comedy', 'horror', 'action'],model_train='spatial', model_name=default_model_name, ):
+def train_classifier(genres=['comedy', 'horror', 'action'],model_train='spatial', model_name=default_model_name, epoch=100):
     
     """Gather data for selected genres"""
     trainingData = []
@@ -19,7 +19,7 @@ def train_classifier(genres=['comedy', 'horror', 'action'],model_train='spatial'
     for genreIndex, genre in enumerate(genres):
 #        print "Looking for pickle file: data/{0}{1}.p".format(genre, str(num_of_videos)),
         try:
-            genreFeatures = load_pkl("train/"+genre+"_ultimate_"+default_model_name)
+            genreFeatures = load_pkl("train/"+genre+"_train_"+default_model_name)
             genreFeatures = np.array([np.array(f) for f in genreFeatures]) # numpy hack
         except Exception as e:
             print(e)
@@ -55,7 +55,7 @@ def train_classifier(genres=['comedy', 'horror', 'action'],model_train='spatial'
    
     """Start training"""
     batch_size = 32
-    nb_epoch = 100 
+    #b_epoch = 100 
 
     model.fit(trainingData, trainingLabels, batch_size=batch_size, epochs=nb_epoch)#, callbacks=[remote])
     modelOutPath ='data/models/'+model_train+'_'+model_name+'_'+str(num_of_classes)+"g_bs"+str(batch_size)+"_ep"+str(nb_epoch)+".h5"
@@ -66,7 +66,8 @@ def train_classifier(genres=['comedy', 'horror', 'action'],model_train='spatial'
 if __name__=="__main__":
     from sys import argv
     nama_model_train = argv[1]
+    nama_extract = argv[2]
+    epoch = argv[3]
     #train_classifier(genres=['action','drama','fantasy','horror','romance'])
     #train_classifier(genres=['action','horror','romance'], model_train=nama_model_train)
-    train_classifier(genres=['action','horror','romance'], model_train=nama_model_train, model_name='resnet')
-
+    train_classifier(genres=['action','horror','romance'], model_train=nama_model_train, model_name='resnet', epoch)
