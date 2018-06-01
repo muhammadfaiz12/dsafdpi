@@ -50,7 +50,7 @@ def gather_testing_data(genre, model_name=default_model_name):
         print(videoFeatures.shape)
         genreFeatures.append(videoFeatures)
 
-    outPath = "test/"+genre+"_test_ultimate_"+model_name
+    outPath = "test/"+genre+"_test_"+model_name
     dump_pkl(genreFeatures, outPath)
 
 

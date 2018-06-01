@@ -44,7 +44,6 @@ def train_classifier(genres=['comedy', 'horror', 'action'],model_train='spatial'
     """Initialize the mode"""
     if(model_train == 'mlp'):
         model = mlp_model(num_of_classes, trainingData.shape[1])
-        optimizer = Adam(lr=1e-5, decay=1e-6)
         model.compile(optimizer='adadelta', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     elif (model_train == 'lstm'):
         num_of_frames = 9
