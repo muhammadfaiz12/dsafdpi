@@ -1,9 +1,10 @@
 from keras.applications.vgg19 import VGG19
 from keras.applications.vgg16 import VGG16
+from keras.applications.resnet50 import ResNet50
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Flatten
 from keras.layers import LSTM
-from keras.layers.convolutional import Convolution2D, Convolution3D, MaxPooling2D
+from keras.layers.convolutional import Convolution2D, Convolution3D, MaxPooling2D, Conv2D, MaxPooling3D, Conv3D
 from keras import backend
 import numpy as np
 import tensorflow as tf
@@ -21,7 +22,7 @@ def remove_last_layers(model):
 
 vgg_model_16 = VGG16(include_top=True, weights="imagenet")
 vgg_model_19 = VGG19(include_top=True, weights="imagenet")
-
+resnet50_model = ResNet50(weights='imagenet', include_top=False, pooling='avg')
 remove_last_layers(vgg_model_16)
 remove_last_layers(vgg_model_19)
 
@@ -33,7 +34,10 @@ def get_features_batch(frames, model_name="vgg16"):
 
     if model_name.lower() in ["vgg19", "vgg_19"]:
         model = vgg_model_19
-
+        
+    if model_name.lower() in ["resnet", "resnet50"]:
+        model = resnet50_model
+    
     imageTensor = np.array(frames)
 
     ### /255 causing error. Maybe Vanishing gradients
@@ -61,6 +65,18 @@ def get_features(image, model_name="vgg16"):
     modelFeature =  model.predict(imageTensor)[0]
     return modelFeature
 
+def mlp_model(number_of_classes=2):
+    # Model.
+    model = Sequential()
+    model.add(Flatten(input_shape=(224,224,3)))
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(number_of_classes, activation='softmax'))
+    
+    return model
+	
 def spatial_model(number_of_classes=2):
     """Classification layers here."""
 
