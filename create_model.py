@@ -5,7 +5,7 @@ from model_utils import spatial_model
 
 
 
-def train_classifier(genres=['comedy', 'horror', 'action'], model_name=default_model_name):
+def train_classifier(genres=['comedy', 'horror', 'action'], epoch=100, model_name=default_model_name):
     
     """Gather data for selected genres"""
     trainingData = []
@@ -16,7 +16,7 @@ def train_classifier(genres=['comedy', 'horror', 'action'], model_name=default_m
     for genreIndex, genre in enumerate(genres):
 #        print "Looking for pickle file: data/{0}{1}.p".format(genre, str(num_of_videos)),
         try:
-            genreFeatures = load_pkl("train/"+genre+"_ultimate_"+default_model_name)
+            genreFeatures = load_pkl("train/"+genre+"_train_"+default_model_name)
             genreFeatures = np.array([np.array(f) for f in genreFeatures]) # numpy hack
         except Exception as e:
             print(e)
@@ -44,15 +44,16 @@ def train_classifier(genres=['comedy', 'horror', 'action'], model_name=default_m
    
     """Start training"""
     batch_size = 32
-    nb_epoch = 100 
+    #b_epoch = 100 
 
-    model.fit(trainingData, trainingLabels, batch_size=batch_size, epochs=nb_epoch)#, callbacks=[remote])
-    modelOutPath ='data/models/spatial'+model_name+'_'+str(num_of_classes)+"g_bs"+str(batch_size)+"_ep"+str(nb_epoch)+".h5"
+    model.fit(trainingData, trainingLabels, batch_size=batch_size, epochs=epoch)#, callbacks=[remote])
+    modelOutPath ='data/models/spatial'+model_name+'_'+str(num_of_classes)+"g_bs"+str(batch_size)+"_ep"+str(epoch)+".h5"
     model.save(modelOutPath)
     print("Model saved at",modelOutPath)
  
 
 if __name__=="__main__":
-
-    #train_classifier(genres=['action','drama','fantasy','horror','romance'])
-	train_classifier(genres=['action','horror','romance'])
+    from sys import argv
+    epoch = int(argv[1])
+    train_classifier(['action','horror','romance'], epoch, default_model_name)
+	

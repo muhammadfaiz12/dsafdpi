@@ -60,7 +60,7 @@ def ultimate_evaluate(model):
     for genreIndex, genre in enumerate(genres):
 #        print "Looking for pickle file: data/{0}{1}.p".format(genre, str(num_of_videos)),
         try:
-            genreFeatures = load_pkl("test/"+genre+"_ultimate_"+default_model_name)
+            genreFeatures = load_pkl("test/"+genre+"_test_"+default_model_name)
             genreFeatures = np.array([np.array(f) for f in genreFeatures]) # numpy hack
         except Exception as e:
             print (e)
@@ -84,6 +84,55 @@ def ultimate_evaluate(model):
 
     confusionMatrix = confusion_matrix(yTrue, yPredict)
     print (confusionMatrix)
+    '''
+    tp_action = confusionMatrix[0][0]
+    tp_horror = confusionMatrix[1][1]
+    tp_romance = confusionMatrix[2][2]
+    fp_action = confusionMatrix[1][0] + confusionMatrix[2][0]
+    fp_horror = confusionMatrix[0][1] + confusionMatrix[2][1]
+    fp_romance = confusionMatrix[0][2] + confusionMatrix[1][2]
+    fn_action = confusionMatrix[0][1] + confusionMatrix[0][2]
+    fn_horror = confusionMatrix[1][0] + confusionMatrix[1][2]
+    fn_romance = confusionMatrix[2][0] + confusionMatrix[2][1]
+    tn_action = confusionMatrix[1][1] + confusionMatrix[1][2] + confusionMatrix[2][1] + confusionMatrix[2][2]
+    tn_horror = confusionMatrix[0][0] + confusionMatrix[0][2] + confusionMatrix[2][0] + confusionMatrix[2][2]
+    tn_romance = confusionMatrix[0][0] + confusionMatrix[0][1] + confusionMatrix[1][0] + confusionMatrix[1][1]
+    prec_action = tp_action/(fp_action+tp_action)
+    prec_horror = tp_horror/(fp_horror+tp_horror)
+    prec_romance = tp_romance/(fp_romance+tp_romance)
+    rec_action = tp_action/(fn_action+tp_action)
+    rec_horror = tp_horror/(fn_horror+tp_horror)
+    rec_romance = tp_romance/(fn_romance+tp_romance)
+    '''
+    total_acc = 0
+    for i in range(len(genres)):
+        tp = confusionMatrix[i][i]
+        fp = 0
+        for j in range(len(genres)):
+            if (i != j):
+                fp = fp + confusionMatrix[j][i]
+        fn = 0
+        for j in range(len(genres)):
+            if (i != j):
+                fn = fn + confusionMatrix[i][j]
+        tn = 0
+        for j in range(len(genres)):
+            for k in range(len(genres)):
+                if (i != j):
+                    if (i != k):
+                        tn = tn + confusionMatrix[j][k]
+        prec = tp/(tp+fp)*100
+        rec = tp/(tp+fn)*100
+        f1 = (prec+rec)/2
+        acc = (tp+tn)/(tp+fp+fn+tn)*100
+        print ("Precision of "+genres[i]+" is "+str(round(prec,2))+"%\n")
+        print ("Recall of "+genres[i]+" is "+str(round(rec,2))+"%\n")
+        print ("F1 of "+genres[i]+" is "+str(round(f1,2))+"%\n")
+        print ("Accuracy of "+genres[i]+" is "+str(round(acc,2))+"%\n")
+        print("---------------")
+        total_acc = total_acc + acc
+    total_acc = total_acc/3
+    print ("Overall Accuracy is "+str(round(total_acc,2))+"%\n")
 
 #
 if __name__=="__main__":
